@@ -27,7 +27,7 @@ export function getTodayDateStr(): string {
   return formatDate(now);
 }
 
-function formatDate(date: Date): string {
+export function formatDate(date: Date): string {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
@@ -207,6 +207,9 @@ ${carryoverSection}
 
 ## Done
 <!-- 成果をここに記録 -->
+
+## Handoff
+<!-- 所感・引き継ぎ・明日の優先 -->
 
 ## Notes
 <!-- ブロッカー、アイデア、メモ -->
@@ -392,4 +395,402 @@ export function completeTask(
     task: { ...task, completed: true, doneDate: dateStr },
     content: newContent,
   };
+}
+
+export function getCurrentTimeStr(): string {
+  const now = new Date();
+  const hours = String(now.getHours()).padStart(2, "0");
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+  return `${hours}:${minutes}`;
+}
+
+export function addLogEntry(
+  config: Config,
+  dateStr: string,
+  activity: string
+): { success: boolean; timestamp: string; content: string } {
+  const taskFile = readTaskFile(config, dateStr);
+  if (!taskFile) {
+    return { success: false, timestamp: "", content: "" };
+  }
+
+  const timestamp = getCurrentTimeStr();
+  const logEntry = `- ${timestamp} ${activity}`;
+
+  const lines = taskFile.content.split("\n");
+  const newLines: string[] = [];
+  let inDoneSection = false;
+  let logInserted = false;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+
+    if (line === "## Done") {
+      inDoneSection = true;
+      newLines.push(line);
+      continue;
+    }
+
+    if (inDoneSection && line.startsWith("## ")) {
+      // Entering a new section, insert log before this if not already
+      if (!logInserted) {
+        newLines.push(logEntry);
+        logInserted = true;
+      }
+      inDoneSection = false;
+    }
+
+    // Insert after comment or at first empty line in Done section
+    if (inDoneSection && !logInserted) {
+      if (line.startsWith("<!--") && line.includes("-->")) {
+        newLines.push(line);
+        newLines.push(logEntry);
+        logInserted = true;
+        continue;
+      }
+    }
+
+    newLines.push(line);
+  }
+
+  // If we're still in done section at end of file
+  if (inDoneSection && !logInserted) {
+    newLines.push(logEntry);
+  }
+
+  const newContent = newLines.join("\n");
+  writeTaskFile(config, dateStr, newContent);
+
+  return { success: true, timestamp, content: newContent };
+}
+
+export interface DailyReport {
+  date: string;
+  weekday: string;
+  completedTasks: Task[];
+  incompleteTasks: Task[];
+  doneItems: string[];
+  notes: string[];
+  summary: {
+    totalTasks: number;
+    completed: number;
+    incomplete: number;
+    completionRate: number;
+  };
+}
+
+export function generateDailyReport(
+  config: Config,
+  dateStr: string
+): DailyReport | null {
+  const taskFile = readTaskFile(config, dateStr);
+  if (!taskFile) {
+    return null;
+  }
+
+  // Parse notes section
+  const notes: string[] = [];
+  const lines = taskFile.content.split("\n");
+  let inNotesSection = false;
+
+  for (const line of lines) {
+    if (line === "## Notes") {
+      inNotesSection = true;
+      continue;
+    }
+    if (inNotesSection && line.startsWith("## ")) {
+      inNotesSection = false;
+    }
+    if (inNotesSection) {
+      const noteMatch = line.match(/^- (.+)$/);
+      if (noteMatch) {
+        notes.push(noteMatch[1]);
+      }
+    }
+  }
+
+  const completedTasks = taskFile.tasks.filter((t) => t.completed);
+  const incompleteTasks = taskFile.tasks.filter((t) => !t.completed);
+  const totalTasks = taskFile.tasks.length;
+  const completionRate =
+    totalTasks > 0 ? Math.round((completedTasks.length / totalTasks) * 100) : 0;
+
+  return {
+    date: taskFile.date,
+    weekday: taskFile.weekday,
+    completedTasks,
+    incompleteTasks,
+    doneItems: taskFile.doneItems,
+    notes,
+    summary: {
+      totalTasks,
+      completed: completedTasks.length,
+      incomplete: incompleteTasks.length,
+      completionRate,
+    },
+  };
+}
+
+export interface HandoffEntry {
+  timestamp: string;
+  thoughts?: string;
+  context?: string;
+  priority?: string;
+}
+
+export function addHandoffEntry(
+  config: Config,
+  dateStr: string,
+  entry: HandoffEntry
+): { success: boolean; timestamp: string; content: string } {
+  const taskFile = readTaskFile(config, dateStr);
+  if (!taskFile) {
+    return { success: false, timestamp: "", content: "" };
+  }
+
+  const lines = taskFile.content.split("\n");
+  const newLines: string[] = [];
+  let inHandoffSection = false;
+  let entryInserted = false;
+
+  // Build the entry content
+  const entryLines: string[] = [];
+  entryLines.push(`### ${entry.timestamp}`);
+  if (entry.thoughts) {
+    entryLines.push("#### 所感");
+    entryLines.push(`- ${entry.thoughts}`);
+  }
+  if (entry.context) {
+    entryLines.push("#### 引き継ぎ");
+    entryLines.push(`- ${entry.context}`);
+  }
+  if (entry.priority) {
+    entryLines.push("#### 明日の優先");
+    entryLines.push(`- ${entry.priority}`);
+  }
+  entryLines.push("");
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+
+    if (line === "## Handoff") {
+      inHandoffSection = true;
+      newLines.push(line);
+      continue;
+    }
+
+    if (inHandoffSection && line.startsWith("## ")) {
+      // Entering a new section, insert entry before this if not already
+      if (!entryInserted) {
+        newLines.push(...entryLines);
+        entryInserted = true;
+      }
+      inHandoffSection = false;
+    }
+
+    // Insert after comment in Handoff section
+    if (inHandoffSection && !entryInserted) {
+      if (line.startsWith("<!--") && line.includes("-->")) {
+        newLines.push(line);
+        newLines.push(...entryLines);
+        entryInserted = true;
+        continue;
+      }
+    }
+
+    newLines.push(line);
+  }
+
+  // If we're still in handoff section at end of file
+  if (inHandoffSection && !entryInserted) {
+    newLines.push(...entryLines);
+  }
+
+  const newContent = newLines.join("\n");
+  writeTaskFile(config, dateStr, newContent);
+
+  return { success: true, timestamp: entry.timestamp, content: newContent };
+}
+
+export function addNoteEntry(
+  config: Config,
+  dateStr: string,
+  timestamp: string,
+  content: string
+): { success: boolean; timestamp: string; content: string } {
+  const taskFile = readTaskFile(config, dateStr);
+  if (!taskFile) {
+    return { success: false, timestamp: "", content: "" };
+  }
+
+  const noteEntry = `- ${timestamp} ${content}`;
+  const lines = taskFile.content.split("\n");
+  const newLines: string[] = [];
+  let inNotesSection = false;
+  let noteInserted = false;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+
+    if (line === "## Notes") {
+      inNotesSection = true;
+      newLines.push(line);
+      continue;
+    }
+
+    if (inNotesSection && line.startsWith("## ")) {
+      // Entering a new section, insert note before this if not already
+      if (!noteInserted) {
+        newLines.push(noteEntry);
+        noteInserted = true;
+      }
+      inNotesSection = false;
+    }
+
+    // Insert after comment in Notes section
+    if (inNotesSection && !noteInserted) {
+      if (line.startsWith("<!--") && line.includes("-->")) {
+        newLines.push(line);
+        newLines.push(noteEntry);
+        noteInserted = true;
+        continue;
+      }
+    }
+
+    newLines.push(line);
+  }
+
+  // If we're still in notes section at end of file
+  if (inNotesSection && !noteInserted) {
+    newLines.push(noteEntry);
+  }
+
+  const newContent = newLines.join("\n");
+  writeTaskFile(config, dateStr, newContent);
+
+  return { success: true, timestamp, content: newContent };
+}
+
+export function getHandoffSection(
+  config: Config,
+  dateStr: string
+): string | null {
+  const taskFile = readTaskFile(config, dateStr);
+  if (!taskFile) {
+    return null;
+  }
+
+  const lines = taskFile.content.split("\n");
+  const handoffLines: string[] = [];
+  let inHandoffSection = false;
+
+  for (const line of lines) {
+    if (line === "## Handoff") {
+      inHandoffSection = true;
+      continue;
+    }
+    if (inHandoffSection && line.startsWith("## ")) {
+      break;
+    }
+    if (inHandoffSection) {
+      // Skip comments
+      if (line.startsWith("<!--") && line.includes("-->")) {
+        continue;
+      }
+      if (line.trim() !== "") {
+        handoffLines.push(line);
+      }
+    }
+  }
+
+  if (handoffLines.length === 0) {
+    return null;
+  }
+
+  return handoffLines.join("\n");
+}
+
+export function findPreviousTaskFileDate(
+  config: Config,
+  currentDateStr: string
+): string | null {
+  const currentDate = new Date(currentDateStr);
+
+  // Look back up to 30 days
+  for (let i = 1; i <= 30; i++) {
+    const prevDate = new Date(currentDate);
+    prevDate.setDate(prevDate.getDate() - i);
+    const prevDateStr = formatDate(prevDate);
+
+    if (taskFileExists(config, prevDateStr)) {
+      return prevDateStr;
+    }
+  }
+
+  return null;
+}
+
+export function formatDailyReportMarkdown(report: DailyReport): string {
+  const lines: string[] = [];
+
+  lines.push(`# 日報 ${report.date} (${report.weekday})`);
+  lines.push("");
+
+  // Summary
+  lines.push("## サマリー");
+  lines.push("");
+  lines.push(`- タスク総数: ${report.summary.totalTasks}`);
+  lines.push(`- 完了: ${report.summary.completed}`);
+  lines.push(`- 未完了: ${report.summary.incomplete}`);
+  lines.push(`- 達成率: ${report.summary.completionRate}%`);
+  lines.push("");
+
+  // Completed tasks
+  lines.push("## 完了したタスク");
+  lines.push("");
+  if (report.completedTasks.length > 0) {
+    for (const task of report.completedTasks) {
+      lines.push(`- ${task.text}`);
+    }
+  } else {
+    lines.push("（なし）");
+  }
+  lines.push("");
+
+  // Activity log
+  lines.push("## 活動ログ");
+  lines.push("");
+  if (report.doneItems.length > 0) {
+    for (const item of report.doneItems) {
+      lines.push(`- ${item}`);
+    }
+  } else {
+    lines.push("（記録なし）");
+  }
+  lines.push("");
+
+  // Remaining tasks
+  lines.push("## 残タスク");
+  lines.push("");
+  if (report.incompleteTasks.length > 0) {
+    for (const task of report.incompleteTasks) {
+      const dueInfo = task.due ? ` (期限: ${task.due})` : "";
+      lines.push(`- ${task.text}${dueInfo}`);
+    }
+  } else {
+    lines.push("（なし）");
+  }
+  lines.push("");
+
+  // Notes
+  if (report.notes.length > 0) {
+    lines.push("## メモ・備考");
+    lines.push("");
+    for (const note of report.notes) {
+      lines.push(`- ${note}`);
+    }
+    lines.push("");
+  }
+
+  return lines.join("\n");
 }

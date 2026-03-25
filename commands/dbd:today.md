@@ -34,6 +34,9 @@ prev: {PREV_DATE}
 ## Done
 <!-- Record accomplishments here -->
 
+## Handoff
+<!-- Thoughts, handoff, tomorrow's priorities -->
+
 ## Notes
 <!-- Blockers, ideas, meeting notes -->
 ```
@@ -71,6 +74,20 @@ prev: {PREV_DATE}
 ## Output
 
 After execution, show:
+- **Previous day's handoff** (if exists): Display handoff items from the previous task file as context for today
 - The full content of today's task file
 - Count of carryover tasks (if any)
 - Reminder: "Use `/dbd:add` to add tasks, `/dbd:done` to record accomplishments"
+
+## Previous Handoff Display
+
+If the previous task file has a Handoff section with content, display it at the top:
+
+```
+## Previous Handoff (YYYY-MM-DD)
+[Handoff content from previous day]
+
+---
+```
+
+This helps maintain context continuity between days.

@@ -2,6 +2,9 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { registerAddTool } from "./tools/add.js";
 import { registerDoneTool } from "./tools/done.js";
+import { registerLogTool } from "./tools/log.js";
+import { registerNoteTool } from "./tools/note.js";
+import { registerReportTool } from "./tools/report.js";
 import { registerTodayTool } from "./tools/today.js";
 import { getConfig } from "./utils/config.js";
 
@@ -18,6 +21,9 @@ const server = new McpServer({
 registerTodayTool(server, config);
 registerAddTool(server, config);
 registerDoneTool(server, config);
+registerLogTool(server, config);
+registerNoteTool(server, config);
+registerReportTool(server, config);
 
 // Start server
 async function main() {

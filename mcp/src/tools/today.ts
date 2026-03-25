@@ -6,6 +6,8 @@ import {
   taskFileExists,
   createNewTaskFile,
   getCarryoverTasks,
+  getHandoffSection,
+  findPreviousTaskFileDate,
 } from "../utils/task-file.js";
 
 export function registerTodayTool(server: McpServer, config: Config): void {
@@ -55,9 +57,24 @@ export function registerTodayTool(server: McpServer, config: Config): void {
         .map((t) => `${t.index}. [ ] ${t.text}`)
         .join("\n");
 
+      // Get previous day's handoff section
+      let handoffSection = "";
+      const prevDateStr = findPreviousTaskFileDate(config, dateStr);
+      if (prevDateStr) {
+        const prevHandoff = getHandoffSection(config, prevDateStr);
+        if (prevHandoff) {
+          handoffSection = `## Previous Handoff (${prevDateStr})
+${prevHandoff}
+
+---
+
+`;
+        }
+      }
+
       const response = `# Today's Tasks (${dateStr})
 
-## Summary
+${handoffSection}## Summary
 - Total tasks: ${summary.totalTasks}
 - Incomplete: ${summary.incompleteTasks}
 - Completed: ${summary.completedTasks}
