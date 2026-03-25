@@ -54,9 +54,10 @@ git push -u origin main
 | コマンド | 説明 |
 |---------|------|
 | `/dbd:today` | 今日のセッションを開始。前日からの未完了タスクを引き継いで日次ファイルを作成 |
-| `/dbd:add [タスク]` | 新しいタスクを追加。タグ対応: `#project`, `@person`, `due:DATE` |
+| `/dbd:add [タスク...]` | 新しいタスクを追加（複数可、引数なしで対話モード）。タグ対応: `#project`, `@person`, `due:DATE` |
+| `/dbd:log <内容>` | やったことをタイムスタンプ付きで即座に記録（Doneセクションに追記） |
 | `/dbd:done` | 対話的にタスクを完了にし、成果を記録 |
-| `/dbd:monthly` | 月次サマリーレポートを生成 |
+| `/dbd:monthly [YYYY-MM]` | 月次サマリーレポートを生成（引数省略で今月） |
 
 ## ディレクトリ構成
 
@@ -124,6 +125,8 @@ prev: 2026-03-24
 日中:
   > /dbd:add ログインバグ修正 #auth
   > /dbd:add PRレビュー @alice due:2026-03-26
+  > /dbd:log API認証機能を実装した #backend
+  > /dbd:log PRレビュー完了 @alice
 
 終業時:
   > /dbd:done         # タスクを完了にし、やったことを記録
@@ -158,6 +161,35 @@ cd ..
 git add framework
 git commit -m "Update framework submodule"
 ```
+
+## MCPサーバー
+
+他のプロジェクトからタスク管理機能にアクセスするためのMCPサーバーも提供しています。
+
+### MCPツール
+
+| ツール | 説明 |
+|--------|------|
+| `dbd_today` | 今日のタスク一覧を取得 |
+| `dbd_add` | 新しいタスクを追加 |
+| `dbd_done` | タスクを完了にする |
+
+### セットアップ
+
+```bash
+# MCPサーバーをビルド
+cd framework/mcp
+npm install
+npm run build
+
+# Claude Codeに登録
+claude mcp add \
+  --transport stdio \
+  --env DBD_ROOT=/path/to/aquila-claude-dbd \
+  dbd -- node /path/to/aquila-claude-dbd/framework/mcp/build/index.js
+```
+
+詳細は [mcp/README.md](mcp/README.md) を参照してください。
 
 ## ライセンス
 

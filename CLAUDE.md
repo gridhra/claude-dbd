@@ -65,3 +65,29 @@ prev: YYYY-MM-DD
 - コマンドファイルはClaude向けの指示なので英語で記述
 - ユーザー向けドキュメント（README.md, CLAUDE.md.template）は日本語
 - setup.shの出力メッセージは日本語
+
+## コマンド変更時の同期ルール（必須）
+
+**コマンドファイル（`commands/*.md`）を変更した場合、以下のファイルも必ず同期すること：**
+
+1. `framework/README.md` - コマンド一覧、使用例
+2. `framework/CLAUDE.md.template` - コマンド早見表、ワークフロー例
+3. `../CLAUDE.md`（親リポジトリ） - コマンド早見表、ワークフロー例
+
+### 同期が必要な変更
+
+- コマンド名の変更（例: `/add` → `/dbd:add`）
+- コマンドの追加・削除
+- コマンドの使用方法・引数の変更
+- コマンドの動作仕様の変更
+
+### 同期チェックリスト
+
+```
+[ ] commands/*.md を変更
+[ ] framework/README.md を更新
+[ ] framework/CLAUDE.md.template を更新
+[ ] ../CLAUDE.md を更新（親リポジトリがある場合）
+```
+
+**注意**: このルールはClaude Codeが自動的に従う。コマンド変更を依頼された場合、関連ドキュメントも同時に更新すること。
