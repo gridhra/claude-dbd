@@ -1,4 +1,4 @@
-# /today - Daily Task Startup
+# /dbd:today - Daily Task Startup
 
 Start or continue today's task management session.
 
@@ -73,4 +73,4 @@ prev: {PREV_DATE}
 After execution, show:
 - The full content of today's task file
 - Count of carryover tasks (if any)
-- Reminder: "Use `/add` to add tasks, `/done` to record accomplishments"
+- Reminder: "Use `/dbd:add` to add tasks, `/dbd:done` to record accomplishments"

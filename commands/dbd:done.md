@@ -1,4 +1,4 @@
-# /done - Record Accomplishments
+# /dbd:done - Record Accomplishments
 
 Interactively record what you accomplished and update task status.
 

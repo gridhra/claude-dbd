@@ -1,20 +1,20 @@
-# /add - Add New Task
+# /dbd:add - Add New Task
 
 Add a new task to today's task file.
 
 ## Usage
 
 ```
-/add [task description with optional tags]
+/dbd:add [task description with optional tags]
 ```
 
 ## Examples
 
 ```
-/add Implement login API #backend due:2026-03-26
-/add Review design document @designer
-/add Fix bug in checkout flow #urgent
-/add                          # Interactive mode - will prompt for task
+/dbd:add Implement login API #backend due:2026-03-26
+/dbd:add Review design document @designer
+/dbd:add Fix bug in checkout flow #urgent
+/dbd:add                          # Interactive mode - will prompt for task
 ```
 
 ## Tag Reference
@@ -28,7 +28,7 @@ Add a new task to today's task file.
 ## Behavior
 
 1. **Get today's task file** at `tasks/YYYY/MM/YYYY-MM-DD.md`
-2. **If file doesn't exist**: Run `/today` first to create it
+2. **If file doesn't exist**: Run `/dbd:today` first to create it
 3. **Parse the task description** from command arguments
 4. **If no arguments**: Ask user for task description interactively
 5. **Add task** to the Tasks section (after existing tasks)
@@ -41,7 +41,7 @@ Add a new task to today's task file.
    test -f tasks/$(date +%Y)/$(date +%m)/$(date +%Y-%m-%d).md
    ```
 
-2. If file doesn't exist, inform user to run `/today` first
+2. If file doesn't exist, inform user to run `/dbd:today` first
 
 3. If no task provided in arguments, use AskUserQuestion to prompt:
    ```

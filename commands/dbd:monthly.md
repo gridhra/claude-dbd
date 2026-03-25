@@ -1,12 +1,12 @@
-# /monthly - Generate Monthly Report
+# /dbd:monthly - Generate Monthly Report
 
 Generate a summary report of completed tasks and accomplishments for the current month.
 
 ## Usage
 
 ```
-/monthly           # Generate report for current month
-/monthly 2026-02   # Generate report for specific month
+/dbd:monthly           # Generate report for current month
+/dbd:monthly 2026-02   # Generate report for specific month
 ```
 
 ## Behavior

@@ -11,10 +11,10 @@ Claude Code CLI向けの日次タスク管理フレームワーク
 ```
 claude-dbd/
 ├── commands/           # スラッシュコマンド定義
-│   ├── today.md       # 今日のセッション開始
-│   ├── done.md        # 完了報告
-│   ├── add.md         # タスク追加
-│   └── monthly.md     # 月次レポート
+│   ├── dbd:today.md   # 今日のセッション開始
+│   ├── dbd:done.md    # 完了報告
+│   ├── dbd:add.md     # タスク追加
+│   └── dbd:monthly.md # 月次レポート
 ├── CLAUDE.md          # このファイル（開発用コンテキスト）
 ├── CLAUDE.md.template # ユーザー向けテンプレート
 ├── setup.sh           # セットアップスクリプト
