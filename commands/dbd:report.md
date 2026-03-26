@@ -18,8 +18,9 @@ Generate a summary report of the day's tasks and activities.
 ## Behavior
 
 1. **Read the task file** for the specified date (default: today)
-2. **Analyze** completed tasks, activity logs, and remaining tasks
-3. **Generate** a formatted daily report in Japanese
+2. **Analyze** activity logs and extract key accomplishments
+3. **Filter** remaining tasks to only show tomorrow's priorities
+4. **Generate** a formatted daily report in Japanese
 
 ## Instructions
 
@@ -37,54 +38,64 @@ Generate a summary report of the day's tasks and activities.
    - Exit
 
 4. Parse the file and extract:
-   - Completed tasks (lines with `- [x]`)
-   - Incomplete tasks (lines with `- [ ]`)
    - Done section entries (activity log)
+   - Incomplete tasks with due dates
    - Notes section entries
 
-5. Calculate summary:
-   - Total tasks count
-   - Completed count
-   - Incomplete count
-   - Completion rate (%)
+5. Generate accomplishments summary:
+   - Analyze activity log entries
+   - Group related items and create a concise summary (1-2 sentences)
+   - This goes at the TOP of the report
 
-6. Generate and display the report in the following format:
+6. Filter remaining tasks:
+   - Only include tasks due tomorrow or earlier (overdue)
+   - Do NOT include tasks due later than tomorrow
+
+7. Generate and display the report in the following format:
 
 ## Output Format
 
 ```markdown
 # 日報 YYYY-MM-DD (Weekday)
 
-## サマリー
+## 本日の成果
 
-- タスク総数: X
-- 完了: X
-- 未完了: X
-- 達成率: X%
-
-## 完了したタスク
-
-- Task 1
-- Task 2
+[1-2 sentence summary of key accomplishments]
 
 ## 活動ログ
 
-- HH:MM Activity 1
-- HH:MM Activity 2
+- Activity 1
+- Activity 2
+- ...
 
-## 残タスク
+## 明日やること
 
-- Remaining task 1 (期限: YYYY-MM-DD)
-- Remaining task 2
+- Task 1 (期限: MM-DD)
+- Task 2 (期限: MM-DD)
 
 ## メモ・備考
 
 - Note 1
-- Note 2
 ```
+
+## Key Points
+
+- **成果を先に**: 活動ログより前に、成果サマリーを表示
+- **残タスクは明日分のみ**: 翌営業日までの期限のタスクだけを表示
+- **達成率は不要**: シンプルに成果とやることだけを表示
+
+## Clipboard Copy
+
+After generating the report, **automatically copy it to clipboard** using:
+
+```bash
+echo "{REPORT_CONTENT}" | pbcopy
+```
+
+Then inform the user: "📋 クリップボードにコピーしました"
 
 ## Tips
 
 - Use at the end of the day to summarize accomplishments
-- The report can be copied to Slack, email, or other reporting systems
+- The report can be pasted directly to Slack, email, or other reporting systems
 - Combine with `/dbd:monthly` for longer-term tracking
