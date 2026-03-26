@@ -4,6 +4,7 @@ import { registerAddTool } from "./tools/add.js";
 import { registerDoneTool } from "./tools/done.js";
 import { registerLogTool } from "./tools/log.js";
 import { registerNoteTool } from "./tools/note.js";
+import { registerPrioritizeTool } from "./tools/prioritize.js";
 import { registerReportTool } from "./tools/report.js";
 import { registerTodayTool } from "./tools/today.js";
 import { getConfig } from "./utils/config.js";
@@ -23,6 +24,7 @@ registerAddTool(server, config);
 registerDoneTool(server, config);
 registerLogTool(server, config);
 registerNoteTool(server, config);
+registerPrioritizeTool(server, config);
 registerReportTool(server, config);
 
 // Start server

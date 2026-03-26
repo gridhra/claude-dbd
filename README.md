@@ -59,6 +59,7 @@ git push -u origin main
 | `/dbd:note [内容]` | メモや引き継ぎを記録（Notes/Handoffセクションに振り分け） |
 | `/dbd:done` | 対話的にタスクを完了にし、成果を記録 |
 | `/dbd:report [YYYY-MM-DD]` | 日報を自動生成（引数省略で今日） |
+| `/dbd:prioritize` | タスク優先度分析（営業日残・effort・impact考慮） |
 | `/dbd:monthly [YYYY-MM]` | 月次サマリーレポートを生成（引数省略で今月） |
 
 ## ディレクトリ構成
@@ -126,6 +127,8 @@ prev: 2026-03-24
 | `#tag` | プロジェクト/カテゴリ | `#api`, `#docs`, `#urgent` |
 | `@name` | 担当者/関係者 | `@client`, `@team` |
 | `due:DATE` | 期限 | `due:2026-03-25` |
+| `effort:X` | 作業の重さ (S/M/L/XL) | `effort:M` |
+| `impact:X` | インパクト (L/M/H/C) | `impact:H` |
 | `_done:DATE` | 完了日（自動付与） | `_done:2026-03-25` |
 
 ## 日常のワークフロー
@@ -190,6 +193,7 @@ git commit -m "Update framework submodule"
 | `dbd_done` | タスクを完了にする |
 | `dbd_log` | 活動をタイムスタンプ付きで記録 |
 | `dbd_note` | メモや引き継ぎを記録 |
+| `dbd_prioritize` | タスク優先度分析 |
 | `dbd_report` | 日報を自動生成 |
 
 ### セットアップ

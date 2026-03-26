@@ -12,6 +12,7 @@
 | `/dbd:note [内容]` | メモや引き継ぎを記録（Notes/Handoffに振り分け） |
 | `/dbd:done` | 対話的にタスクを完了にし、成果を記録 |
 | `/dbd:report [YYYY-MM-DD]` | 日報を自動生成（引数省略で今日） |
+| `/dbd:prioritize` | タスク優先度分析（営業日残・effort・impact） |
 | `/dbd:monthly [YYYY-MM]` | 月次サマリーレポートを生成（引数省略で今月） |
 
 ## ファイルの場所
@@ -24,11 +25,13 @@
 - `#tag` - プロジェクト/カテゴリ（例: `#api`, `#docs`, `#urgent`）
 - `@name` - 担当者/関係者（例: `@client`, `@team`）
 - `due:YYYY-MM-DD` - 期限
+- `effort:X` - 作業の重さ（S=数時間, M=1日, L=数日, XL=1週間+）
+- `impact:X` - インパクト（L=低, M=中, H=高, C=クリティカル）
 - `_done:YYYY-MM-DD` - 完了日（自動付与）
 
 ## 日常のワークフロー
 
-1. 朝: `/dbd:today` で開始（前日の引き継ぎを確認）
+1. 朝: `/dbd:today` で開始 → `/dbd:prioritize` で今日の優先度確認
 2. 日中: `/dbd:add タスク説明 #project` でタスク追加
 3. 作業完了時: `/dbd:log 実装内容 #tag` で都度記録
 4. メモ時: `/dbd:note メモ内容` で記録（自動振り分け）
