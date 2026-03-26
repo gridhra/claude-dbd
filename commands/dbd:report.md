@@ -19,8 +19,9 @@ Generate a summary report of the day's tasks and activities.
 
 1. **Read the task file** for the specified date (default: today)
 2. **Analyze** activity logs and extract key accomplishments
-3. **Filter** remaining tasks to only show tomorrow's priorities
-4. **Generate** a formatted daily report in Japanese
+3. **Interview** the user to fill gaps and confirm handoff items
+4. **Filter** remaining tasks to only show tomorrow's priorities
+5. **Generate** a formatted daily report in Japanese
 
 ## Instructions
 
@@ -42,16 +43,29 @@ Generate a summary report of the day's tasks and activities.
    - Incomplete tasks with due dates
    - Notes section entries
 
-5. Generate accomplishments summary:
+5. **Interview the user** (use AskUserQuestion tool):
+
+   **Question 1: 未記載の活動確認**
+   - Show the current Done section entries as bullet points
+   - Ask: "他に記録していない作業はありますか？"
+   - Options: "特になし", "あり"
+   - If user selects "あり", they provide text → append to Done section
+
+   **Question 2: 引き継ぎ事項確認**
+   - Ask: "明日への引き継ぎ・申し送り事項はありますか？"
+   - Options: "特になし", "あり"
+   - If user selects "あり", they provide text → add to Handoff section
+
+6. Generate accomplishments summary:
    - Analyze activity log entries
    - Group related items and create a concise summary (1-2 sentences)
    - This goes at the TOP of the report
 
-6. Filter remaining tasks:
+7. Filter remaining tasks:
    - Only include tasks due tomorrow or earlier (overdue)
    - Do NOT include tasks due later than tomorrow
 
-7. Generate and display the report in the following format:
+8. Generate and display the report in the following format:
 
 ## Output Format
 
