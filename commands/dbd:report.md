@@ -43,18 +43,38 @@ Generate a summary report of the day's tasks and activities.
    - Incomplete tasks with due dates
    - Notes section entries
 
-5. **Interview the user** (use AskUserQuestion tool):
+5. **Interview the user** (対話形式で確認):
 
-   **Question 1: 未記載の活動確認**
-   - Show the current Done section entries as bullet points
-   - Ask: "他に記録していない作業はありますか？"
-   - Options: "特になし", "あり"
-   - If user selects "あり", they provide text → append to Done section
+   タスクファイルを読んだ後、以下の形式でユーザーに確認を求める。
+   **ツールは使わず、通常のテキスト出力で質問し、ユーザーの返答を待つ。**
 
-   **Question 2: 引き継ぎ事項確認**
-   - Ask: "明日への引き継ぎ・申し送り事項はありますか？"
-   - Options: "特になし", "あり"
-   - If user selects "あり", they provide text → add to Handoff section
+   ```
+   ## 日報作成: {DATE}
+
+   ### 現在の記録
+
+   **Done:**
+   - [Doneセクションの内容を箇条書きで表示]
+   - （空の場合は「記録なし」）
+
+   **Handoff:**
+   - [Handoffセクションの内容を箇条書きで表示]
+   - （空の場合は「記録なし」）
+
+   ---
+
+   ### 追加・修正があれば教えてください
+
+   - 他にやったこと
+   - 明日への引き継ぎ
+   - 成果物の添付（スクショやコードなど）
+
+   **なければ「ok」と入力してください。**
+   ```
+
+   ユーザーの返答に応じて:
+   - 「ok」「特になし」等 → そのまま日報生成へ進む
+   - 追加内容あり → Doneセクション/Handoffセクションを更新してから日報生成
 
 6. Generate accomplishments summary:
    - Analyze activity log entries
@@ -67,36 +87,53 @@ Generate a summary report of the day's tasks and activities.
 
 8. Generate and display the report in the following format:
 
-## Output Format
+## Output Format (Slack mrkdwn最適化)
 
-```markdown
-# 日報 YYYY-MM-DD (Weekday)
+Slackは標準Markdownではなく独自の「mrkdwn」形式を使用する。
+以下の形式で出力すること:
 
-## 本日の成果
+```
+:memo: *日報 MM/DD (Weekday)*
 
-[1-2 sentence summary of key accomplishments]
+:white_check_mark: *本日の成果*
+[1-2文の成果サマリー]
 
-## 活動ログ
+:pencil: *活動ログ*
+• Activity 1
+• Activity 2
 
-- Activity 1
-- Activity 2
-- ...
+:arrow_right: *明日やること*
+• Task 1 (MM/DD)
+• Task 2 (MM/DD)
 
-## 明日やること
-
-- Task 1 (期限: MM-DD)
-- Task 2 (期限: MM-DD)
-
-## メモ・備考
-
-- Note 1
+:speech_balloon: *メモ*
+[メモがあれば記載、なければセクションごと省略]
 ```
 
-## Key Points
+### Slack mrkdwn 記法ルール
 
-- **成果を先に**: 活動ログより前に、成果サマリーを表示
-- **残タスクは明日分のみ**: 翌営業日までの期限のタスクだけを表示
-- **達成率は不要**: シンプルに成果とやることだけを表示
+| 要素 | 正しい書き方 | 間違い |
+|------|-------------|--------|
+| 太字 | `*text*` | `**text**` |
+| 斜体 | `_text_` | `*text*` |
+| 箇条書き | `• ` または `* ` | `- ` |
+| 見出し | `*太字*` + 絵文字 | `# ` `## ` |
+
+### 絵文字ガイド
+
+- `:memo:` 📝 - 日報タイトル
+- `:white_check_mark:` ✅ - 成果
+- `:pencil:` ✏️ - 活動ログ
+- `:arrow_right:` ➡️ - 明日やること
+- `:speech_balloon:` 💬 - メモ
+- `:warning:` ⚠️ - 注意事項・ブロッカー
+
+### Key Points
+
+- *太字+絵文字*でセクション見出しを作る（`#`は使えない）
+- 箇条書きは `•` を使用（`-` より視認性が良い）
+- 日付は `MM/DD` 形式（短く）
+- メモが空ならセクションごと省略してコンパクトに
 
 ## Clipboard Copy
 

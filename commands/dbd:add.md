@@ -15,7 +15,7 @@ Add one or more tasks to today's task file.
 /dbd:add ドキュメント更新、テスト作成、レビュー依頼
 /dbd:add
   - バグ修正 #urgent
-  - コードレビュー @alice
+  - コードレビュー #review
   - デプロイ準備
 /dbd:add                          # Interactive mode - will prompt for task
 ```
@@ -25,7 +25,6 @@ Add one or more tasks to today's task file.
 | Tag | Purpose | Example |
 |-----|---------|---------|
 | `#tag` | Category/project | `#api`, `#docs`, `#urgent` |
-| `@name` | Assignee/stakeholder | `@client`, `@team` |
 | `due:DATE` | Due date | `due:2026-03-25` |
 
 ## Behavior
@@ -51,7 +50,7 @@ Add one or more tasks to today's task file.
    - Analyze the input text intelligently
    - Identify if multiple tasks are intended (look for: bullet points, numbered lists, commas, line breaks, conjunctions like "と" or "and")
    - Split into separate tasks as appropriate
-   - Preserve tags (#tag, @name, due:DATE) for each task
+   - Preserve tags (#tag, due:DATE) for each task
 
 4. **If no arguments**: Use AskUserQuestion to prompt for tasks
 

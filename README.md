@@ -98,7 +98,7 @@ prev: 2026-03-24
 
 ## Tasks
 - [ ] 今日の新しいタスク #api due:2026-03-26
-- [ ] 別のタスク @teammate
+- [ ] 別のタスク due:2026-03-27
 - [x] 完了したタスク _done:2026-03-25
 
 ## Done
@@ -125,7 +125,6 @@ prev: 2026-03-24
 | タグ | 用途 | 例 |
 |-----|------|-----|
 | `#tag` | プロジェクト/カテゴリ | `#api`, `#docs`, `#urgent` |
-| `@name` | 担当者/関係者 | `@client`, `@team` |
 | `due:DATE` | 期限 | `due:2026-03-25` |
 | `effort:X` | 作業の重さ (S/M/L/XL) | `effort:M` |
 | `impact:X` | インパクト (L/M/H/C) | `impact:H` |
@@ -140,9 +139,9 @@ prev: 2026-03-24
 
 日中:
   > /dbd:add ログインバグ修正 #auth
-  > /dbd:add PRレビュー @alice due:2026-03-26
+  > /dbd:add PRレビュー due:2026-03-26
   > /dbd:log API認証機能を実装した #backend
-  > /dbd:log PRレビュー完了 @alice
+  > /dbd:log PRレビュー完了
   > /dbd:note デバッグ手順のメモ  # Notesセクションに記録
 
 終業時:

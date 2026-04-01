@@ -84,7 +84,7 @@ claude mcp add \
 ## Incomplete Tasks
 1. [ ] API実装 #backend
 2. [ ] ドキュメント更新 #docs
-3. [ ] コードレビュー @alice
+3. [ ] コードレビュー #review
 
 ## Raw File Content
 ...
@@ -183,7 +183,7 @@ Date: 2026-03-25
 
 ## 残タスク
 
-- コードレビュー @alice (期限: 2026-03-26)
+- コードレビュー (期限: 2026-03-26)
 ```
 
 ## 開発

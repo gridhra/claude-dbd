@@ -23,7 +23,6 @@
 ## タグ記法
 
 - `#tag` - プロジェクト/カテゴリ（例: `#api`, `#docs`, `#urgent`）
-- `@name` - 担当者/関係者（例: `@client`, `@team`）
 - `due:YYYY-MM-DD` - 期限
 - `effort:X` - 作業の重さ（S=数時間, M=1日, L=数日, XL=1週間+）
 - `impact:X` - インパクト（L=低, M=中, H=高, C=クリティカル）
@@ -43,6 +42,5 @@
 <!-- 例:
 - メインプロジェクト: Webアプリケーション開発
 - 技術スタック: React, Node.js, PostgreSQL
-- チーム: @alice (フロントエンド), @bob (バックエンド), @carol (デザイン)
 - 主要リポジトリ: frontend-app, api-server
 -->

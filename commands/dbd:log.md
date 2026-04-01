@@ -48,9 +48,9 @@ Quick-log what you just accomplished with timestamp.
 
 ```
 /dbd:log Fixed authentication bug #backend
-/dbd:log Code review for PR #123 @alice
+/dbd:log Code review for PR #123
 /dbd:log Deployed to staging
-/dbd:log Meeting: Sprint planning @team
+/dbd:log Meeting: Sprint planning
 ```
 
 ## Output Format

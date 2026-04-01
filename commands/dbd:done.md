@@ -19,7 +19,7 @@ Display incomplete tasks:
 Current incomplete tasks:
 1. [ ] API implementation #backend
 2. [ ] Write documentation #docs
-3. [ ] Review PR @teammate
+3. [ ] Review PR #review
 ```
 
 ### Step 2: Ask for Completion
