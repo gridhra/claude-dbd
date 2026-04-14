@@ -5,9 +5,25 @@ description: 今日のセッションを開始。日次ファイルの作成/表
 
 # dbd:today
 
+## 日付判定（27時制）
+
+現在時刻が午前3時（03:00）より前の場合、前日をタスク上の「今日」として扱う。
+これは深夜作業が前日の延長である実態に合わせるため。
+
+```bash
+HOUR=$(date +%H)
+if [ "$HOUR" -lt 3 ]; then
+  TODAY=$(date -v-1d +%Y-%m-%d)
+  WEEKDAY=$(date -v-1d +%a)
+else
+  TODAY=$(date +%Y-%m-%d)
+  WEEKDAY=$(date +%a)
+fi
+```
+
 ## 動作
 
-1. `date +%Y-%m-%d` で今日の日付と曜日を取得
+1. 上記の27時制ルールで「今日」の日付と曜日を決定
 2. `tasks/YYYY/MM/YYYY-MM-DD.md` が存在するか確認
 3. **ファイルがある場合**: 内容を表示
 4. **ファイルがない場合**:
@@ -44,14 +60,19 @@ prev: {PREV_DATE}
 
 ## 手順
 
-1. 今日の日付を取得:
+1. 27時制で「今日」の日付を決定:
    ```bash
-   date +%Y-%m-%d
+   HOUR=$(date +%H)
+   if [ "$HOUR" -lt 3 ]; then
+     TODAY=$(date -v-1d +%Y-%m-%d)
+   else
+     TODAY=$(date +%Y-%m-%d)
+   fi
    ```
 
 2. ファイル存在確認:
    ```bash
-   ls tasks/$(date +%Y)/$(date +%m)/$(date +%Y-%m-%d).md
+   ls tasks/${TODAY:0:4}/${TODAY:5:2}/${TODAY}.md
    ```
 
 3. ファイルがない場合、直近のファイルを取得:
