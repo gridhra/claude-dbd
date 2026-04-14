@@ -62,11 +62,16 @@ else
 fi
 
 # .claudeディレクトリとシンボリックリンクを作成
-echo -e "${GREEN}.claude/commands シンボリックリンクを設定中...${NC}"
+echo -e "${GREEN}.claude/skills シンボリックリンクを設定中...${NC}"
 mkdir -p .claude
-if [ ! -L ".claude/commands" ]; then
-    ln -s ../framework/commands .claude/commands
-    echo "シンボリックリンクを作成: .claude/commands -> ../framework/commands"
+# 旧commands リンクがあれば削除
+if [ -L ".claude/commands" ]; then
+    rm .claude/commands
+    echo "旧シンボリックリンクを削除: .claude/commands"
+fi
+if [ ! -L ".claude/skills" ]; then
+    ln -s ../framework/skills .claude/skills
+    echo "シンボリックリンクを作成: .claude/skills -> ../framework/skills"
 else
     echo -e "${YELLOW}シンボリックリンクは既に存在します${NC}"
 fi

@@ -13,7 +13,9 @@
 | `/dbd:done` | 対話的にタスクを完了にし、成果を記録 |
 | `/dbd:report [YYYY-MM-DD]` | 日報を自動生成（引数省略で今日） |
 | `/dbd:prioritize` | タスク優先度分析（営業日残・effort・impact） |
+| `/dbd:gh-done [日付] [repo]` | GitHubのPR活動を取得してDoneに記録 |
 | `/dbd:monthly [YYYY-MM]` | 月次サマリーレポートを生成（引数省略で今月） |
+| `/dbd:commit [YYYY-MM-DD]` | タスクファイルをコミット |
 
 ## ファイルの場所
 

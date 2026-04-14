@@ -7,7 +7,7 @@ Claude Code CLI向けの日次タスク管理システム
 - **ローカルファースト**: データはすべてリポジトリ内に保存、Git管理
 - **シンプルなタグ記法**: `#project`, `@person`, `due:DATE`
 - **セッション継続性**: 未完了タスクの自動引き継ぎ
-- **スラッシュコマンド**: `/dbd:today`, `/dbd:add`, `/dbd:done`, `/dbd:monthly`
+- **スラッシュコマンド**: `/dbd:today`, `/dbd:add`, `/dbd:done`, `/dbd:gh-done`, `/dbd:monthly`
 
 ## クイックスタート
 
@@ -32,9 +32,9 @@ git init
 # claude-dbdをサブモジュールとして追加
 git submodule add https://github.com/YOUR_USERNAME/claude-dbd.git framework
 
-# コマンド用のシンボリックリンクを作成
+# スキル用のシンボリックリンクを作成
 mkdir -p .claude
-ln -s ../framework/commands .claude/commands
+ln -s ../framework/skills .claude/skills
 
 # CLAUDE.mdテンプレートをコピー
 cp framework/CLAUDE.md.template CLAUDE.md
@@ -53,23 +53,25 @@ git push -u origin main
 
 | コマンド | 説明 |
 |---------|------|
-| `/dbd:today` | 今日のセッションを開始。前日からの未完了タスクを引き継いで日次ファイルを作成。前日のHandoffがあれば表示 |
-| `/dbd:add [タスク...]` | 新しいタスクを追加（複数可、引数なしで対話モード）。タグ対応: `#project`, `@person`, `due:DATE` |
-| `/dbd:log <内容>` | やったことをタイムスタンプ付きで即座に記録（Doneセクションに追記） |
-| `/dbd:note [内容]` | メモや引き継ぎを記録（Notes/Handoffセクションに振り分け） |
+| `/dbd:today` | 今日のセッションを開始。未完了タスクの引き継ぎ、前日Handoff表示 |
+| `/dbd:add [タスク...]` | タスクを追加（複数可、引数なしで対話モード） |
+| `/dbd:log <内容>` | やったことをタイムスタンプ付きで即座に記録 |
+| `/dbd:note [内容]` | メモや引き継ぎを記録（Notes/Handoffに自動振り分け） |
 | `/dbd:done` | 対話的にタスクを完了にし、成果を記録 |
-| `/dbd:report [YYYY-MM-DD]` | 日報を自動生成（引数省略で今日） |
+| `/dbd:report [YYYY-MM-DD]` | 日報を自動生成（Slack mrkdwn形式） |
 | `/dbd:prioritize` | タスク優先度分析（営業日残・effort・impact考慮） |
-| `/dbd:monthly [YYYY-MM]` | 月次サマリーレポートを生成（引数省略で今月） |
+| `/dbd:gh-done [日付] [repo]` | GitHubのPR活動を取得してDoneに記録 |
+| `/dbd:monthly [YYYY-MM]` | 月次サマリーレポートを生成 |
+| `/dbd:commit [YYYY-MM-DD]` | タスクファイルをコミット |
 
 ## ディレクトリ構成
 
 ```
 my-tasks/                     # あなたのプライベートリポジトリ
 ├── framework/                # claude-dbdサブモジュール
-│   └── commands/
+│   └── skills/
 ├── .claude/
-│   └── commands -> ../framework/commands
+│   └── skills -> ../framework/skills
 ├── CLAUDE.md                 # カスタマイズしたコンテキスト
 ├── tasks/
 │   └── 2026/
